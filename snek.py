@@ -26,9 +26,9 @@ class SnakeGame:
         out = []
         out.append(["+"] + ["-"] * self.w + ["+"])
         inner = [[" " for _ in range(self.w)] for _ in range(self.h)]
-        for y, x in self.body:
+        for i, (y, x) in enumerate(self.body):
             if 0 <= y < self.h and 0 <= x < self.w:
-                inner[y][x] = "#"
+                inner[y][x] = "@" if i == len(self.body) - 1 else "#"
         if self.apple:
             ay, ax = self.apple
             if 0 <= ay < self.h and 0 <= ax < self.w:
