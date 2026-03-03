@@ -70,17 +70,20 @@ def game_loop(stdscr):
 
         game.set_direction(key)
         if not game.do_step():
-            print("Game over!")
+            stdscr.clear()
+            for y, row in enumerate(game.grid()):
+                for x, char in enumerate(row):
+                    stdscr.addch(y, x, ord(str(char)))
+            stdscr.addstr(game.h // 2 + 1, game.w // 2 - 4, "Game over!")
+            stdscr.refresh()
+            stdscr.nodelay(0)
+            stdscr.getch()
             return
 
         stdscr.clear()
-
-        # Draw grid
         for y, row in enumerate(game.grid()):
             for x, char in enumerate(row):
                 stdscr.addch(y, x, ord(str(char)))
-
-        # Refresh screen
         stdscr.refresh()
 
 
