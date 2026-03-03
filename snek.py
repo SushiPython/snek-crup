@@ -71,7 +71,7 @@ def game_loop(stdscr):
     game = SnakeGame(25, 15)
     curses.curs_set(0)
     stdscr.nodelay(1)
-    stdscr.timeout(200)
+    stdscr.timeout(100)
     max_y, max_x = stdscr.getmaxyx()
 
     while True:
