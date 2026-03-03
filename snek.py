@@ -1,4 +1,5 @@
 import curses
+import random
 from typing import Optional
 
 
@@ -13,6 +14,13 @@ class SnakeGame:
         self.dy = 0
         self.next_dx = 1
         self.next_dy = 0
+        self.apple = None
+        self._spawn_apple()
+
+    def _spawn_apple(self):
+        empty = [(y, x) for y in range(self.h) for x in range(self.w) if (y, x) not in self.body and (y, x) != self.apple]
+        if empty:
+            self.apple = random.choice(empty)
 
     def grid(self) -> list[list[str]]:
         out = []
@@ -21,6 +29,10 @@ class SnakeGame:
         for y, x in self.body:
             if 0 <= y < self.h and 0 <= x < self.w:
                 inner[y][x] = "#"
+        if self.apple:
+            ay, ax = self.apple
+            if 0 <= ay < self.h and 0 <= ax < self.w:
+                inner[ay][ax] = "*"
         for row in inner:
             out.append(["|"] + row + ["|"])
         out.append(["+"] + ["-"] * self.w + ["+"])
@@ -48,7 +60,10 @@ class SnakeGame:
         if (ny, nx) in self.body:
             return False
         self.body.append((ny, nx))
-        self.body.pop(0)
+        if self.apple and (ny, nx) == self.apple:
+            self._spawn_apple()
+        else:
+            self.body.pop(0)
         return True
 
 
