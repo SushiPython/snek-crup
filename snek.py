@@ -53,17 +53,12 @@ class SnakeGame:
 
 
 def game_loop(stdscr):
-    """
-    Main game loop that manages game setup and execution.
-    """
     game = SnakeGame(25, 15)
-
-    # Game setup
     curses.curs_set(0)
     stdscr.nodelay(1)
     stdscr.timeout(400)
+    max_y, max_x = stdscr.getmaxyx()
 
-    # Game loop
     while True:
         key = stdscr.getch()
         key = chr(key) if 0 <= key < 256 else None
@@ -73,8 +68,11 @@ def game_loop(stdscr):
             stdscr.clear()
             for y, row in enumerate(game.grid()):
                 for x, char in enumerate(row):
-                    stdscr.addch(y, x, ord(str(char)))
-            stdscr.addstr(game.h // 2 + 1, game.w // 2 - 4, "Game over!")
+                    if y < max_y and x < max_x:
+                        stdscr.addch(y, x, ord(str(char)))
+            gy, gx = game.h // 2 + 1, max(0, game.w // 2 - 4)
+            if gy < max_y and gx + 9 < max_x:
+                stdscr.addstr(gy, gx, "Game over!")
             stdscr.refresh()
             stdscr.nodelay(0)
             stdscr.getch()
@@ -83,7 +81,8 @@ def game_loop(stdscr):
         stdscr.clear()
         for y, row in enumerate(game.grid()):
             for x, char in enumerate(row):
-                stdscr.addch(y, x, ord(str(char)))
+                if y < max_y and x < max_x:
+                    stdscr.addch(y, x, ord(str(char)))
         stdscr.refresh()
 
 
